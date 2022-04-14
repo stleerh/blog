@@ -1,3 +1,4 @@
+<link href="style.css" rel="stylesheet">
 # Providing Insight with Network Observability
 
 By: Steven Lee
@@ -7,7 +8,7 @@ the start.  You can view monitoring dashboards, and manage metrics and alerts.
 With the OCP 4.10 release, Network Observability is introduced in Developer
 Preview mode.
 
-Developer Previews provide a preview of something that we at Red Hat are
+Developer Previews provide early access to something that we at Red Hat are
 working on, but is not ready for prime time. The Network Observability feature
 provides the ability to export, collect, enrich, and store NetFlow data as a
 new telemetry data source.  There is also a frontend that integrates with
@@ -39,7 +40,7 @@ IPFIX, I will only focus on the scenario where you are running OpenShift 4.10.
 
 The prerequisites are:
 
-    1. OpenShift cluster<br>
+1. OpenShift cluster<br>
     The cluster can be self-managed or any of the supported [Red Hat Cloud
 Services](https://www.redhat.com/en/technologies/cloud-computing/openshift/cloud-services).
 If you are creating a cluster, be sure to set the Container Networking
@@ -47,15 +48,15 @@ Interface (CNI) provider to be OVN-Kubernetes (see next item).  Red Hat offers
 a [free trial](https://www.redhat.com/en/technologies/cloud-computing/openshift/try-it)
 if you don’t have a cluster.
 
-    2. Using OVN-Kubernetes as the CNI provider<br>
+2. Using OVN-Kubernetes as the CNI provider<br>
     The CNI provider must be OVN-Kubernetes because it leverages the Open
 vSwitch (OVS) to provide flows.  If your CNI is OpenShift SDN, there is a
 [migration guide](https://docs.openshift.com/container-platform/4.10/networking/ovn_kubernetes_network_provider/migrate-from-openshift-sdn.html)
 to help you switch over, but make sure you understand the implications of this
 change.
 
-    3. Access to an account on your cluster that has the cluster-admin role,
-       such as kubeadmin.
+3. Access to an account on your cluster that has the cluster-admin role,
+such as kubeadmin.
 
 
 ## Installation
@@ -76,96 +77,96 @@ This creates various Kubernetes objects to provide a better understanding of
 OpenShift.  IMPORTANT: These steps are for this Developer's Preview only, and
 may be different for future versions.
 
-    1. Log into the OpenShift web console as kubeadmin or with an account with
-       cluster-admin role.
+1. Log into the OpenShift web console as kubeadmin or with an account with
+cluster-admin role.
 
-    2. Create a new project
-        1. From the Navigation Panel, click **Home > Projects**.
-        2. Click the **Create Project** button.
-        3. Enter `network-observability` for the **Name** and click **Create**.
+2. Create a new project
+    1. From the Navigation Panel, click **Home > Projects**.
+    2. Click the **Create Project** button.
+    3. Enter `network-observability` for the **Name** and click **Create**.
 
-    3. Create persistent volume
-        1. From the Navigation Panel, click **Storage > PersistentVolumeClaims**.
-        2. Click the **Create PersistentVolumeClaim** button.
-        3. Enter `loki-store` for the **PersistentVolumeClaim** name.  Change
-           **Size** to 1 or more GiB, and then click **Create**.
+3. Create persistent volume
+    1. From the Navigation Panel, click **Storage > PersistentVolumeClaims**.
+    2. Click the **Create PersistentVolumeClaim** button.
+    3. Enter `loki-store` for the **PersistentVolumeClaim** name.  Change
+       **Size** to 1 or more GiB, and then click **Create**.
 
-    4. Install Loki
-        1. From the Navigation Panel, click **Workloads > Pods**.
-        2. Click the **Create Pod** button.
-        3. Replace the text with the following:
+4. Install Loki
+    1. From the Navigation Panel, click **Workloads > Pods**.
+    2. Click the **Create Pod** button.
+    3. Replace the text with the following:
 
-            ```
-            apiVersion: v1
-            kind: Pod
-            metadata:
-              name: loki
-              labels:
-                app: loki
-            spec:
-              volumes:
-                - name: loki-store
-                  persistentVolumeClaim:
-                    claimName: loki-store
-              containers:
-                - name: loki
-                  image: grafana/loki
-                  volumeMounts:
-                    - mountPath: "/loki-store"
-                      name: loki-store
-            ```
+        ```
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: loki
+          labels:
+            app: loki
+        spec:
+          volumes:
+            - name: loki-store
+              persistentVolumeClaim:
+                claimName: loki-store
+          containers:
+            - name: loki
+              image: grafana/loki
+              volumeMounts:
+                - mountPath: "/loki-store"
+                  name: loki-store
+        ```
 
-        4. Click **Create**.  Watch the pod go from `Pending` to
-           `ContainerCreating` to `Running`.
-        5. From the Navigation Panel, click **Networking > Services**.
-        6. Click the **Create Service** button.
-        7. In the YAML file, replace **name** and **app** with `loki`.  Change
-           **port** to `3100` and remove **targetPort**.  It should look like the
-           following:
+    4. Click **Create**.  Watch the pod go from `Pending` to
+       `ContainerCreating` to `Running`.
+    5. From the Navigation Panel, click **Networking > Services**.
+    6. Click the **Create Service** button.
+    7. In the YAML file, replace **name** and **app** with `loki`.  Change
+       **port** to `3100` and remove **targetPort**.  It should look like the
+       following:
 
-            ```
-            apiVersion: v1
-            kind: Service
-            metadata:
-              name: loki
-              namespace: network-observability
-            spec:
-              selector:
-                app: loki
-              ports:
-                - protocol: TCP
-                  port: 3100
-            ```
+        ```
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: loki
+          namespace: network-observability
+        spec:
+          selector:
+            app: loki
+          ports:
+            - protocol: TCP
+              port: 3100
+        ```
 
 
-        8. Click **Create**.
+    8. Click **Create**.
 
-    5. Install Network Observability
-        1. From the Navigation Panel, click **Operators > OperatorHub**.
-        2. In the filter field, enter `netobserv`.  Select **NetObserv Operator**.
-            This is a community operator so you will get a warning that this may not
-            be stable and that there is no support so it goes without saying that this
-            should not be deployed in production.
-        3. Click **Install** to move to the next page.  Accept all the defaults and
-           click **Install** again.  It will take a few seconds to install the
-            flow collector and the user interface plugin.
-        4. From the Navigation Panel, click **Operators > Installed Operators**.
-            On the **NetObserv Operator** row, click the **Flow Collector** link, and then
-            **Create FlowCollector**.
-        5. Click the **Ipfix** section.  Change Sampling to `1`.  Then click **Create**.
-        6. From the Navigation Panel, click **Administration > Cluster Settings**.
-        7. Click the **Configuration** tab.
-        8. Scroll down and click **Console - operator.openshift.io**.
-        9. Click the **Console plugins** tab.
-        10. For the **network-observability-plugin** row, click the **Disabled**
-            link and change this to **Enabled**.  This enables the user interface plugin.  It
-            could take up to a minute for the plugin to appear.  If you wait long enough, a
-            dialog appears telling you to _Refresh web console_.  Reload the web page and
-            verify that **Observe > Network Traffic** exists.  If not, wait a bit longer and
-            if the menu selection still does not show up, double check your work and see
-            if there are any reported errors.
-        11. Click **Observe > Network Traffic**, and you should see a NetFlow table
-            with lots of data!  If the table is empty, wait a few seconds and try again.
+5. Install Network Observability
+    1. From the Navigation Panel, click **Operators > OperatorHub**.
+    2. In the filter field, enter `netobserv`.  Select **NetObserv Operator**.
+        This is a community operator so you will get a warning that this may not
+        be stable and that there is no support so it goes without saying that this
+        should not be deployed in production.
+    3. Click **Install** to move to the next page.  Accept all the defaults and
+       click **Install** again.  It will take a few seconds to install the
+        flow collector and the user interface plugin.
+    4. From the Navigation Panel, click **Operators > Installed Operators**.
+        On the **NetObserv Operator** row, click the **Flow Collector** link, and then
+        **Create FlowCollector**.
+    5. Click the **Ipfix** section.  Change Sampling to `1`.  Then click **Create**.
+    6. From the Navigation Panel, click **Administration > Cluster Settings**.
+    7. Click the **Configuration** tab.
+    8. Scroll down and click **Console - operator.openshift.io**.
+    9. Click the **Console plugins** tab.
+    10. For the **network-observability-plugin** row, click the **Disabled**
+        link and change this to **Enabled**.  This enables the user interface plugin.  It
+        could take up to a minute for the plugin to appear.  If you wait long enough, a
+        dialog appears telling you to _Refresh web console_.  Reload the web page and
+        verify that **Observe > Network Traffic** exists.  If not, wait a bit longer and
+        if the menu selection still does not show up, double check your work and see
+        if there are any reported errors.
+    11. Click **Observe > Network Traffic**, and you should see a NetFlow table
+        with lots of data!  If the table is empty, wait a few seconds and try again.
 
 
 ## To sample or not to sample
@@ -245,13 +246,13 @@ video file, it will play the video.  If it’s an image file, it will display th
 picture.  This will be accessible by anyone who knows the URL.  We will examine
 the NetFlow table as we do these actions.
 
-    1. From the Navigation Panel, click **Administrator** and then select **Developer**
-    to switch to the Developer view.  Click **Skip Tour** to skip the tour.
-    2. Click the **Project** drop-down menu and click **Create Project**. Enter
-    `mywebapp` and then click **Create**.
-    3. In the **+Add** panel, click the **_Samples_** section.
-    4. Scroll down and select **PHP**.
-    5. Accept the defaults and click **Create**.
+1. From the Navigation Panel, click **Administrator** and then select **Developer**
+to switch to the Developer view.  Click **Skip Tour** to skip the tour.
+2. Click the **Project** drop-down menu and click **Create Project**. Enter
+`mywebapp` and then click **Create**.
+3. In the **+Add** panel, click the **_Samples_** section.
+4. Scroll down and select **PHP**.
+5. Accept the defaults and click **Create**.
 
 This takes you to the **Topology** panel.  After about a minute, you should
 have a running web server.
@@ -309,9 +310,8 @@ EOF
 
 Go back to the browser tab containing  the home page of your app.  Add
 `/upload.php` to the address.  At the time of this writing, my URL, which is no
-longer valid, was:
-
-http:%2d%2dphp-sample-mywebapp.apps.stlee-cluster104.devcluster.openshift.com/upload.php
+longer valid, was
+`http://php-sample-mywebapp.apps.stlee-cluster104.devcluster.openshift.com/upload.php`.
 
 Before you upload a file, we need to make one additional change for now.  Go
 back to **Operators > Installed Operators**.  On the **NetObserv Operator**
@@ -321,13 +321,13 @@ three dots on the far right and select **Delete FlowCollector**.  Click the
 Sampling to `1` and click **Create**.  Now, let’s set up the NetFlow table to
 view the traffic on this server.
 
-    1. In the drop-down menu that says **Developer**, select **Administrator**.
-    2. From the Navigation Panel, click **Observe > Network Traffic**.
-    3. In **Query Options**, select **_Match any column_**.
-    4. For the filter field, select **Source Namespace** and enter `mywebapp`.
-    Create another filter for **Destination Namespace** and enter `mywebapp`.
-    5. In the **Refresh** drop-down menu, select _1**5 second**_.
-    6. In the time range drop-down menu next to **Refresh**, select **_Last 15 minute_**.
+1. In the drop-down menu that says **Developer**, select **Administrator**.
+2. From the Navigation Panel, click **Observe > Network Traffic**.
+3. In **Query Options**, select **_Match any column_**.
+4. For the filter field, select **Source Namespace** and enter `mywebapp`.
+Create another filter for **Destination Namespace** and enter `mywebapp`.
+5. In the **Refresh** drop-down menu, select _1**5 second**_.
+6. In the time range drop-down menu next to **Refresh**, select **_Last 15 minute_**.
 
 Now go back to the app page and upload a file to the server.  Upload a mp3
 sound file or a mp4 video clip.  Depending on your network connection, it may
@@ -351,11 +351,11 @@ looking for.  In addition, the data can be presented in a time series using a
 graph instead of a table.  Figure 2 shows the graphs you can create with
 Grafana based on the same NetFlow data by doing the following:
 
-    1. If in Administrator view, click **Administrator** and then select
-    **Developer** to switch to Developer view.
-    2. Click the **Project** drop-down menu and choose **network-observability**.
-    3. Click **+Add** and then click the **Container images** section.
-    4. Enter `grafana/grafana` for the image name and click **Create**.
+1. If in Administrator view, click **Administrator** and then select
+**Developer** to switch to Developer view.
+2. Click the **Project** drop-down menu and choose **network-observability**.
+3. Click **+Add** and then click the **Container images** section.
+4. Enter `grafana/grafana` for the image name and click **Create**.
 
 This takes you to the **Topology** panel.  Click the arrow link in the
 **grafana** icon to launch the web page for Grafana.  You may have to wait for
@@ -364,17 +364,17 @@ ahead and continue.  Log in by entering `admin` for the username and password.
 You are prompted to change the password.  After that, we will set up and import
 the dashboard.
 
-    1. Click **Add data source**.
-    2. Click the gear icon (second from the last in the top set of icons), and
-    select **Data sources**.
-    3. Click **Add data source**.
-    4. Click **Loki**.  For the **URL**, enter `http://loki:3100`.
-    5. Click the **Save & test** button, and make sure everything is okay.
-    6. Download the dashboard JSON file
-    [here](https://raw.githubusercontent.com/netobserv/network-observability-operator/release-4.10/config/samples/dashboards/Network%20Observability.json).
-    7. Click the **+** icon and select **Import**.
-    8. Click the **Upload JSON file** button, and select the file you just downloaded.
-    You should see the graphs now.
+1. Click **Add data source**.
+2. Click the gear icon (second from the last in the top set of icons), and
+select **Data sources**.
+3. Click **Add data source**.
+4. Click **Loki**.  For the **URL**, enter `http://loki:3100`.
+5. Click the **Save & test** button, and make sure everything is okay.
+6. Download the dashboard JSON file
+[here](https://raw.githubusercontent.com/netobserv/network-observability-operator/release-4.10/config/samples/dashboards/Network%20Observability.json).
+7. Click the **+** icon and select **Import**.
+8. Click the **Upload JSON file** button, and select the file you just downloaded.
+You should see the graphs now.
 
 ![Grafana dashboard graphs](images/grafana_dashboard.png)
 _Figure 2: Grafana dashboard graphs_
