@@ -1,4 +1,3 @@
-<link href="style.css" rel="stylesheet">
 # Providing Insight with Network Observability
 
 By: Steven Lee
@@ -333,7 +332,7 @@ Now go back to the app page and upload a file to the server.  Upload a mp3
 sound file or a mp4 video clip.  Depending on your network connection, it may
 take some time to upload.  At this point, you should see some flows in the
 table.  Click the **Date & time** column to sort on that column.  To play the
-sound file or view a video, add `/img/&lt;filename>` to the home page URL.  You
+sound file or view a video, add `/img/<filename>` to the home page URL.  You
 now have a public file and media server!
 
 Continue to watch the NetFlow table as you are doing these actions.  Can you
