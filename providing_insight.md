@@ -1,4 +1,4 @@
-# Providing Insight with Network Observability
+# A Guide to Providing Insight with Network Observability
 
 By: Steven Lee
 
