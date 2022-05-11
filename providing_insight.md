@@ -152,13 +152,11 @@ cluster-admin role.
     4. From the Navigation Panel, click **Operators > Installed Operators**.
         On the **NetObserv Operator** row, click the **Flow Collector** link, and then
         **Create FlowCollector**.
-    5. Click the **Ipfix** section.  Change Sampling to `1`.  Then click **Create**.
-    6. After some time which could be up to a minute, a dialog should appear telling
-        you to _Refresh web console_. If not, from the Navigation Panel, click
-        **Administration > Cluster Settings**.  Click the **Configuration** tab.
-        Scroll down and click **Console - operator.openshift.io**.  Click the
-        **Console plugins** tab.  For the **network-observability-plugin** row,
-        click the **Disabled** link and change this to **Enabled**.
+    5. Click **>** in the **Ipfix** section to open this up.  Change Sampling to
+       `1`.  Then click **Create**.
+    7. After some time which could be up to a minute, a dialog with the title
+        **Web console update is available** should appear.  Click the **Refresh
+        web console** link.
     7. Reload the web page and verify that **Observe > Network Traffic** exists.
         If not, double check your work and see if there are any reported errors.
     8. Click **Observe > Network Traffic**, and you should see a NetFlow table
@@ -378,7 +376,7 @@ based on the same NetFlow data by doing the following:
 **Developer** to switch to Developer view.
 2. Click the **Project** drop-down menu and choose **network-observability**.
 3. Click **+Add** and then click the **Container images** section.
-4. Enter `grafana/grafana` for the image name and click **Create**.
+4. Enter `grafana/grafana:8.5.1` for the image name and click **Create**.
 
 This takes you to the **Topology** panel.  Click the arrow link in the **grafana**
 icon to launch the web page for Grafana.  You may have to wait for the application
