@@ -194,18 +194,17 @@ _Figure 1: NetFlow table_
 
 The NetFlow table provides an almost real-time view of data flowing through the
 cluster.  NetFlow data sent by OVS is enriched to include Kubernetes-related
-information, such as namespace and name, the latter which includes pods and
-services.  Scroll down to see more flows or click the **Refresh** button.
-Get a better sense of some of the more common services such as apiserver,
-router, etcd, and dns interacting with other pods.  You can have the table
-automatically refresh periodically.  As you observe the traffic, you might be
-surprised by what you see.
+information, such as namespace and name, which includes pods and services.  Scroll
+to see more flows or click the **Refresh** button.  Get a better sense of some of
+the more common services such as apiserver, router, etcd, and dns interacting
+with other pods.  You can have the table automatically refresh periodically.
+As you observe the traffic, you might be surprised by what you see.
 
 With filtering, you can observe traffic going into or out of a single pod or
 observe traffic between any two pods.  With the former, if you want to see who
-is accessing the api-server, for example, in the filter drop-down, select
+is accessing the apiserver, for example, in the filter drop-down, select
 **Name** under the **Common** section, and enter `apiserver`.  If you want an
-exact match, put double quotes around it.  To ensure that it’s only HTTPS traffic,
+exact match, use quotation marks.  To ensure that it’s only HTTPS traffic,
 in the filter drop-down, select **Destination** and then **Port**.  Enter `443`
 or `https` in the filter field.  The filters are additive so if you want to
 start over, be sure to click **Clear all filters**.
@@ -226,9 +225,10 @@ option to match all or match any filter.  You can also select how many flows
 to display in the UI.
 
 Next to the filter field are three other options.  The first option manages what
-columns to display as there are many more such as Protocol, IP and Direction.
-There are also a few "super" columns like "IPs and Port" that will display the
-source IP, source port, destination IP and destination port, all in one column.
+columns to display as there are many more columns to display, such as Protocol,
+IP and Direction.  There are also a few super-columns like "IPs and Port" that
+display the source IP, source port, destination IP and destination port, all in
+one column.
 
 The next option is the display format, including a compact view to show one flow
 per line.  The last option exports the data in CSV format, which is compatible
@@ -312,12 +312,12 @@ Go back to the browser tab containing  the home page of your app.  Add
 `/upload.php` to the address.  At the time of this writing, my URL, which is no
 longer valid, was
 `http://php-sample-mywebapp.apps.stlee-cluster104.devcluster.openshift.com/upload.php`.
-Before you upload a file, we will set up the filters in the NetFlow table to
-view the traffic on this server.
+Before you upload a file, set up the filters in the NetFlow table to view the
+traffic on this server.
 
 1. In the drop-down menu that says **Developer**, select **Administrator**.
 2. From the Navigation Panel, click **Observe > Network Traffic**.
-3. In the filter field for **Common Namespace**, enter `mywebapp` and press Enter.
+3. In the filter field for **Common Namespace**, enter `mywebapp` and press **Enter**.
 4. In the **Refresh** drop-down menu, select _**15 seconds**_.
 5. In the time range drop-down menu next to **Refresh**, select _**Last 15 minutes**_.
 
@@ -356,9 +356,9 @@ saves the topology as an image file.
 
 There are many options to reduce the data and narrow down to what you 
 are looking for.  Click the settings icon (last icon in the bottom left
-corner) to bring up the **Options** dialog.  Here, you can choose the
+corner) to bring up the **Options** dialog box.  Here, you can choose the
 different displays, how you want the items to be grouped, and a few
-toggles on what to show in the topology.  Outside of this dialog and to
+toggles on what to show in the topology.  Outside of this dialog box and to
 the left of the time range (e.g. Last 15 minutes), you can choose what
 to display on the graph edges and whether to display in bytes or
 packets.
