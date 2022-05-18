@@ -390,7 +390,7 @@ icons), and select **Data sources**.
 3. Click **Loki**.  For the **URL**, enter `http://loki:3100`.
 4. Click the **Save & test** button, and make sure everything is okay.
 5. Download the dashboard JSON file
-[here](https://raw.githubusercontent.com/netobserv/network-observability-operator/0.1.2/config/samples/dashboards/Network%20Observability.json).
+[here](https://raw.githubusercontent.com/netobserv/network-observability-operator/release-4.11/config/samples/dashboards/Network%20Observability.json).
 6. On the left menu, click the **+** icon and select **Import**.
 7. Click the **Upload JSON file** button, and select the file you just downloaded.
 You should see the graphs now.
